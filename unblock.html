@@ -1,35 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Screen Time Request</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-               text-align: center; padding: 20px; background: #f5f5f5; margin: 0; }
-        .container { background: white; padding: 30px; border-radius: 16px;
-                    max-width: 400px; margin: 0 auto; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
-        h1 { color: #333; margin-bottom: 16px; font-size: 24px; }
-        .app-name { color: #007AFF; font-weight: 600; }
-        .reason { background: #f8f9fa; padding: 16px; border-radius: 8px;
-                 margin: 20px 0; font-style: italic; border-left: 4px solid #007AFF; }
-        .decision-text { margin: 20px 0; color: #666; font-size: 16px; }
-        button { padding: 16px 24px; border: none; border-radius: 12px;
-                font-size: 16px; font-weight: 600; margin: 8px; cursor: pointer;
-                min-width: 140px; transition: all 0.2s; display: block; width: 100%; }
-        .approve { background: #34C759; color: white; margin-bottom: 12px; }
-        .approve:hover { background: #30B955; transform: translateY(-1px); }
-        .deny { background: #FF3B30; color: white; }
-        .deny:hover { background: #E8342A; transform: translateY(-1px); }
-        .result { margin-top: 20px; padding: 20px; border-radius: 12px; }
-        .success { background: #D1F2EB; color: #0E7B69; }
-        .denied { background: #FADBD8; color: #A93226; }
-        .info { color: #888; font-size: 14px; margin-top: 16px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #007AFF, #5856D6, #AF52DE);
+        }
+        
+        .icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            box-shadow: 0 10px 30px rgba(0,122,255,0.3);
+        }
+        
+        .icon::before {
+            content: '🔒';
+            font-size: 32px;
+        }
+        
+        h1 {
+            color: #1d1d1f;
+            margin-bottom: 12px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: #86868b;
+            margin-bottom: 24px;
+            font-size: 16px;
+            line-height: 1.4;
+        }
+        
+        .app-name {
+            color: #007AFF;
+            font-weight: 600;
+            background: rgba(0,122,255,0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .reason {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 16px;
+            margin: 24px 0;
+            font-style: italic;
+            border-left: 4px solid #007AFF;
+            position: relative;
+        }
+        
+        .reason::before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 24px;
+            color: #007AFF;
+            opacity: 0.5;
+        }
+        
+        .decision-text {
+            margin: 24px 0;
+            color: #515154;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 32px 0;
+        }
+        
+        button {
+            padding: 18px 24px;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        .approve {
+            background: linear-gradient(135deg, #34C759, #30B955);
+            color: white;
+            box-shadow: 0 8px 24px rgba(52,199,89,0.4);
+        }
+        
+        .approve:hover {
+            background: linear-gradient(135deg, #30B955, #2CA64D);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(52,199,89,0.5);
+        }
+        
+        .deny {
+            background: linear-gradient(135deg, #FF3B30, #E8342A);
+            color: white;
+            box-shadow: 0 8px 24px rgba(255,59,48,0.4);
+        }
+        
+        .deny:hover {
+            background: linear-gradient(135deg, #E8342A, #D12B20);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255,59,48,0.5);
+        }
+        
+        .info {
+            color: #86868b;
+            font-size: 14px;
+            margin-top: 24px;
+            padding: 16px;
+            background: rgba(134,134,139,0.1);
+            border-radius: 12px;
+        }
+        
+        .result {
+            margin-top: 32px;
+            padding: 24px;
+            border-radius: 16px;
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        .success {
+            background: linear-gradient(135deg, #D1F2EB, #A7F3D0);
+            color: #0E7B69;
+            border: 1px solid #34C759;
+        }
+        
+        .denied {
+            background: linear-gradient(135deg, #FADBD8, #FEB2B2);
+            color: #A93226;
+            border: 1px solid #FF3B30;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                border-radius: 16px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            button {
+                padding: 16px 20px;
+                font-size: 16px;
+            }
+        }
+        
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="icon"></div>
         <h1>Screen Time Request</h1>
-        <p>Your friend is asking for permission to use <span class="app-name" id="appName"></span></p>
+        <p class="subtitle">Your friend is asking for permission to use <span class="app-name" id="appName">the app</span></p>
         
         <div class="reason" id="reasonBox" style="display: none;">
             <strong>Their reason:</strong><br>
@@ -40,11 +254,13 @@
             How would you like to respond?
         </div>
         
-        <div id="buttons">
-            <button class="approve" onclick="approveRequest()">
+        <div class="button-container" id="buttons">
+            <button class="approve" onclick="approveRequest(this)">
+                <span class="spinner"></span>
                 ✅ Allow them to use the app
             </button>
-            <button class="deny" onclick="denyRequest()">
+            <button class="deny" onclick="denyRequest(this)">
+                <span class="spinner"></span>
                 ❌ Help them stay focused
             </button>
         </div>
@@ -79,16 +295,30 @@
             }
         }
 
-        function approveRequest() {
-            const { app, approveToken } = getParams();
-            window.location = `shieldtest://unblock?app=${app}&token=${approveToken}`;
-            showResult('✅ You approved their request', 'success');
+        function showSpinner(button) {
+            const spinner = button.querySelector('.spinner');
+            spinner.style.display = 'inline-block';
+            button.disabled = true;
         }
 
-        function denyRequest() {
+        function approveRequest(button) {
+            showSpinner(button);
+            const { app, approveToken } = getParams();
+            
+            // Add a small delay to show the spinner
+            setTimeout(() => {
+                window.location = `shieldtest://unblock?app=${encodeURIComponent(app)}&token=${approveToken}`;
+                showResult('✅ You approved their request!<br><small>Redirecting to app...</small>', 'success');
+            }, 500);
+        }
+
+        function denyRequest(button) {
+            showSpinner(button);
             const { app, denyToken } = getParams();
-            window.location = `shieldtest://excuse?app=${app}&token=${denyToken}`;
-            showResult('❌ You helped them stay focused', 'denied');
+            setTimeout(() => {
+                window.location = `shieldtest://excuse?app=${encodeURIComponent(app)}&token=${denyToken}`;
+                showResult('❌ You helped them stay focused!<br><small>They\'ll understand.</small>', 'denied');
+            }, 500);
         }
 
         function showResult(message, className) {
@@ -98,6 +328,7 @@
             result.className = `result ${className}`;
             result.style.display = 'block';
         }
+
         initPage();
     </script>
 </body>
