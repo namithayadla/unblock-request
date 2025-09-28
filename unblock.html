@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Screen Time Request</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
     <style>
         * {
             margin: 0;
@@ -312,6 +313,7 @@
             button.disabled = true;
         }
 
+
         function approveRequest(button) {
             showSpinner(button);
             const { app, approveToken } = getParams();
@@ -320,36 +322,22 @@
             const redirectUrl = `shieldtest://unblock?app=${encodeURIComponent(app)}&token=${approveToken}`;
             console.log('Redirecting to:', redirectUrl);
             
+            window.location.href = redirectUrl;
             setTimeout(() => {
-                try {
-                    window.location.href = redirectUrl;
-                    setTimeout(() => {
-                        showResult('✅ You approved their request!<br><small>If the app didn\'t open, please open it manually.</small>', 'success');
-                    }, 1000);
-                } catch (error) {
-                    console.error('Redirect failed:', error);
-                    showResult('✅ Request approved!<br><small>Please open the app to see the changes.</small>', 'success');
-                }
-            }, 500);
+                showResult('✅ Request approved!<br><small>Please open the ShieldTest app to see the changes.</small>', 'success');
+            }, 1000);
         }
         
         function denyRequest(button) {
             showSpinner(button);
             const { app, denyToken } = getParams();
             
+            const redirectUrl = `shieldtest://excuse?app=${encodeURIComponent(app)}&token=${denyToken}`;
+            window.location.href = redirectUrl;
+            
             setTimeout(() => {
-                try {
-                    const redirectUrl = `shieldtest://excuse?app=${encodeURIComponent(app)}&token=${denyToken}`;
-                    window.location.href = redirectUrl;
-                    
-                    setTimeout(() => {
-                        showResult('❌ You helped them stay focused!<br><small>If the app didn\'t open, they\'ll see the changes when they open it.</small>', 'denied');
-                    }, 1000);
-                } catch (error) {
-                    console.error('Redirect failed:', error);
-                    showResult('❌ Request denied!<br><small>Your friend will stay focused.</small>', 'denied');
-                }
-            }, 500);
+                showResult('❌ Request denied!<br><small>Your friend will stay focused. They can open the ShieldTest app to see the update.</small>', 'denied');
+            }, 1000);
         }
 
         function showResult(message, className) {
